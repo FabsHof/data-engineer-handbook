@@ -7,6 +7,7 @@ Player = namedtuple("Player",  "player_name height college country draft_year dr
 
 def test_players_scd(spark):
     input_data = [
+        # Player with no season stats
         Player(
             player_name="player1",
             height=1.1,
@@ -16,17 +17,34 @@ def test_players_scd(spark):
             draft_round=1,
             draft_number=1,
             season_stats=[],
-            current_season=2000
+            current_season=2001
         ),
+        # Player with first year season stats
         Player(
             player_name="player2",
             height=2.2,
             college="college2",
             country="country2",
-            draft_year=2,
+            draft_year=1,
             draft_round=2,
             draft_number=2,
-            season_stats=[],
+            season_stats=[
+                ("2001", 10, 20, 30, 40)
+            ],
+            current_season=2001
+        ),
+        # Player with second year season stats
+        Player(
+            player_name="player3",
+            height=3.3,
+            college="college3",
+            country="country3",
+            draft_year=1,
+            draft_round=3,
+            draft_number=3,
+            season_stats=[
+                ("2000", 10, 20, 30, 40)
+            ],
             current_season=2000
         ),
         Player(
@@ -34,11 +52,13 @@ def test_players_scd(spark):
             height=3.3,
             college="college3",
             country="country3",
-            draft_year=3,
+            draft_year=2,
             draft_round=3,
             draft_number=3,
-            season_stats=[],
-            current_season=2000
+            season_stats=[
+                ("2001", 10, 20, 30, 40)
+            ],
+            current_season=2001
         )
     ]
 
@@ -55,29 +75,34 @@ def test_players_scd(spark):
             draft_round=1,
             draft_number=1,
             season_stats=[],
-            current_season=2000
+            current_season=2001
         ),
         Player(
             player_name="player2",
             height=2.2,
             college="college2",
             country="country2",
-            draft_year=2,
+            draft_year=1,
             draft_round=2,
             draft_number=2,
-            season_stats=[],
-            current_season=2000
+            season_stats=[
+                ("2001", 10, 20, 30, 40)
+            ],
+            current_season=2001
         ),
         Player(
             player_name="player3",
             height=3.3,
             college="college3",
             country="country3",
-            draft_year=3,
+            draft_year=1,
             draft_round=3,
             draft_number=3,
-            season_stats=[],
-            current_season=2000
+            season_stats=[
+                ("2000", 10, 20, 30, 40),
+                ("2001", 10, 20, 30, 40)
+            ],
+            current_season=2001
         )
     ]
 

@@ -45,8 +45,8 @@ SELECT
         t.rating,
         t.filmid,
         t.year
-    )]::film[] AS films,
-    q.quality_class,
+    ):: film]::film[] AS films,
+    q.quality_class ::quality_class AS quality_class,
     true AS is_active
 FROM this_year_films t
     JOIN actor_quality q

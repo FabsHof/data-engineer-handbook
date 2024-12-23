@@ -36,7 +36,7 @@ SELECT
                 t.reb,
                 t.ast
             )::season_stats
-        ]
+        ]::season_stats[]
         /* 2. There is no data from today, only take yesterday's data. */
         WHEN t.season IS NOT NULL THEN y.season_stats || ARRAY[
             ROW (
@@ -46,7 +46,7 @@ SELECT
                 t.reb,
                 t.ast
             )::season_stats
-        ]
+        ]::season_stats[]
         /* 3. There is no more new data from the player (e.g. retired), only carry history. */
         ELSE y.season_stats
     END AS season_stats,
@@ -59,14 +59,14 @@ FROM today t
     FULL OUTER JOIN yesterday y ON t.player_name = y.player_name
 """
 
-def do_players_scd_transformation(spark, dataframe):
-    dataframe.createOrReplaceTempView("players")
-    dataframe.createOrReplaceTempView("player_seasons")
+def do_players_scd_transformation(spark, players_df, player_seasons_df):
+    players_df.createOrReplaceTempView("players")
+    player_seasons_df.createOrReplaceTempView("player_seasons")
     return spark.sql(query)
 
 def main():
     spark = SparkSession.builder \
         .appName("players_scd") \
         .getOrCreate()
-    output_df = do_players_scd_transformation(spark, spark.table("players"))
+    output_df = do_players_scd_transformation(spark, spark.table("players"), spark.table("player_seasons"))
     output_df.write.mode("overwrite").saveAsTable("players_scd")
